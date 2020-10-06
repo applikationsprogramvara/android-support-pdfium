@@ -1,23 +1,22 @@
 package org.benjinus.pdfium.samples;
 
-import static android.os.ParcelFileDescriptor.MODE_READ_ONLY;
-
-import android.Manifest;
-import android.Manifest.permission;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
-import java.io.File;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.benjinus.pdfium.Meta;
 import org.benjinus.pdfium.PdfiumSDK;
 import org.benjinus.pdfium.util.Size;
+
+import java.io.File;
+
+import static android.os.ParcelFileDescriptor.MODE_READ_ONLY;
 
 public class MainActivity extends AppCompatActivity {
 
