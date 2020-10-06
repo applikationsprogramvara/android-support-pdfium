@@ -19,7 +19,7 @@ public class SamplesApplication extends Application {
     private File createSampleFile(String fileName) {
         try {
             InputStream in = getAssets().open(fileName);
-            File target = getSampleFile(fileName);
+            File target =  File.createTempFile("temp_", ".pdf", getCacheDir());
             if (target.isFile()) {
                 IOUtils.delete(target);
             }
