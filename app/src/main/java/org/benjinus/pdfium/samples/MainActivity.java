@@ -2,21 +2,17 @@ package org.benjinus.pdfium.samples;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.benjinus.pdfium.Meta;
 import org.benjinus.pdfium.PdfiumSDK;
-import org.benjinus.pdfium.util.Size;
 
 import java.io.File;
-
-import static android.os.ParcelFileDescriptor.MODE_READ_ONLY;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,45 +22,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mImageView = findViewById(R.id.imageView);
-
-
 
         decodePDFPage();
     }
 
     private void decodePDFPage() {
+        PdfiumSDK document;
         try {
-
             File pdfFile = ((SamplesApplication) getApplication()).createNewSampleFile("Sample.pdf");
+            document = new PdfiumSDK(pdfFile);
 
-            ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(pdfFile, MODE_READ_ONLY);
+            Bitmap bitmap = Bitmap.createBitmap(getScreenWidth(), getScreenHeight(), Bitmap.Config.ARGB_8888);
 
-            PdfiumSDK sdk = new PdfiumSDK();
-            sdk.newDocument(fileDescriptor);
+            PointF pageSize = new PointF();
+            document.myRender(bitmap, 3, 0, 0, 1, pageSize);
 
-            Log.d("PDFSDK", "Page count: " + sdk.getPageCount());
-
-            Meta meta = sdk.getDocumentMeta();
-            Log.d("PDFSDK", meta.toString());
-
-            sdk.openPage(0);
-
-            Size size = sdk.getPageSize(0);
-            Log.d("PDFSDK", "Page size: " + size.toString());
-
-            int width = getScreenWidth();
-            int height = getScreenHeight();
-
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            sdk.renderPageBitmap(bitmap, 0, 0, 0, width, height, true);
+            Toast.makeText(this, "Pages : " + document.getPageCount() + "\nSize: " + pageSize.x + " x " + pageSize.y, Toast.LENGTH_LONG).show();
 
             mImageView.setImageBitmap(bitmap);
 
-            sdk.closeDocument();
+            document.closeDocument();
+            document = null;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("MyApp3", e.toString());
+            document = null;
         }
     }
 
